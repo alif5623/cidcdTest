@@ -1,0 +1,17 @@
+name: push-workflow
+
+on:
+  workflow_run:
+    workflows: [pull-workflow]
+    types: [completed]
+
+jobs:
+  push_job:
+    runs-on: self-hosted
+    if: ${{ github.event_name == 'push' }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Debug Event Details
+        run: |
+          echo "Event Action: ${{ github.event.action }}"
+          echo "PR Pushed"
