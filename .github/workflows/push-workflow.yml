@@ -4,7 +4,8 @@ on:
   workflow_run:
     workflows: [pull-workflow]
     types: [completed]
-
+  push:
+    branches: [main]
 jobs:
   push_job:
     runs-on: self-hosted
