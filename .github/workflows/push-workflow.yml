@@ -12,10 +12,6 @@ jobs:
         run: |
           echo "Event Name: ${{ github.event.name }}"
           echo "Event Action: ${{ github.event.action }}"
-      # Push any changes (if any)
-      - name: Push changes back to main (if any)
-        run: |
-          git push origin main || echo "No changes to push"
       # Ensure the script is executable
       - name: Make build script executable
         run: chmod +x ${CI_DIR}/build.sh
