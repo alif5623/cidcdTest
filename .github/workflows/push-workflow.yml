@@ -1,10 +1,11 @@
 name: push-workflow
 
 on:
-  workflow_run:
-    workflows: [pull-workflow]
-    types: [completed]
-
+  pull_request:
+    branches: [main]
+    types: [closed]
+  push:
+    branches: [main]
 jobs:
   push_job:
     runs-on: self-hosted
@@ -12,5 +13,17 @@ jobs:
       - uses: actions/checkout@v2
       - name: Debug Event Details
         run: |
+          echo "Event Name: ${{ github.event.name }}"
           echo "Event Action: ${{ github.event.action }}"
-          echo "PR Pushed"
+      # Ensure the script is executable
+      - name: Make build script executable
+        run: chmod +x ${CI_DIR}/build.sh
+
+      # Run build script
+      - name: Run build script on push
+        run: bash ${CI_DIR}/build.sh
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPO_MESSAGE: ${{ github.event.number }} ${{ github.event.head_commit.message }}
+      CI_DIR: "/Users/t-laode.ika/Documents/githubAction/cicd"
+      TVLK_TOP: "/Users/t-laode.ika/TVLK_TOP"
