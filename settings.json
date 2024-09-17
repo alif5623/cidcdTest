@@ -1,0 +1,12 @@
+{
+  "parameter_store": "/ora/dev/app/p2p",
+  "region" : "ap-southeast-1",
+  "relative_path": ["TVLK_TOP", "XXINT_TOP"],
+  "compile_on_path": [
+    "/objects",
+    "/forms",
+    "/bin"
+  ],
+  "process_first": [],
+  "no_compile_file" : []
+}
