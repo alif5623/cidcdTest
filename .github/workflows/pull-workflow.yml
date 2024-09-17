@@ -5,9 +5,9 @@ on:
     branches: [main]
     types: [closed]
 
-# Concurrency group to control the flow of pull + push for each PR
+# Global concurrency lock to ensure one full workflow (pull + push) completes at a time
 concurrency:
-  group: ci-group-${{ github.event.pull_request.number }}  # Concurrency per PR number
+  group: global-ci  # Global concurrency lock across all workflows
   cancel-in-progress: false  # Queue subsequent jobs instead of canceling
 
 jobs:
