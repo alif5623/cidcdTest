@@ -4,11 +4,12 @@ on:
   workflow_run:
     workflows: ["pull-workflow"]  # The workflow that must complete first
     types:
-      - completed  # Only run after the PR workflow finishes
+      - completed  # Only run after the pull workflow finishes
 
+# Concurrency group shared with pull workflow
 concurrency:
-  group: ci-${{ github.ref }}  # Same concurrency group as the pull request workflow
-  cancel-in-progress: false    # Ensure jobs are queued, not canceled
+  group: ci-${{ github.head_ref || github.event.workflow_run.pull_requests[0].number }}  # Use the same concurrency group as the pull workflow
+  cancel-in-progress: false  # Queue next workflow, don't cancel
 
 jobs:
   push_job:
