@@ -5,9 +5,10 @@ on:
     branches: [main]
     types: [closed]
 
+# Concurrency group to handle PR merges one at a time
 concurrency:
-  group: ci-${{ github.ref }}  # Use the same concurrency group as the push workflow
-  cancel-in-progress: false    # Ensure jobs are queued, not canceled
+  group: ci-${{ github.head_ref || github.event.pull_request.number }}  # Group by pull request or branch
+  cancel-in-progress: false  # Queue next workflow, don't cancel
 
 jobs:
   pr_close_job:
