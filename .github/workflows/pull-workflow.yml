@@ -5,10 +5,10 @@ on:
     branches: [main]
     types: [closed]
 
-# Concurrency group ensures pull requests are handled one at a time
+# Concurrency group to control the flow of pull + push for each PR
 concurrency:
-  group: ci-${{ github.event.pull_request.number }}  # Unique to the PR number
-  cancel-in-progress: false  # Queue subsequent jobs, don't cancel them
+  group: ci-group-${{ github.event.pull_request.number }}  # Concurrency per PR number
+  cancel-in-progress: false  # Queue subsequent jobs instead of canceling
 
 jobs:
   pr_close_job:
