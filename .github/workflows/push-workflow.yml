@@ -6,10 +6,10 @@ on:
     types:
       - completed
 
-# Concurrency group ensures push is tied to the same PR number
+# Use the same concurrency group as the pull workflow
 concurrency:
-  group: ci-${{ github.event.workflow_run.pull_requests[0].number }}  # Use the PR number to ensure strict order
-  cancel-in-progress: false  # Queue subsequent jobs, don't cancel them
+  group: ci-group-${{ github.event.workflow_run.pull_requests[0].number }}  # Use the PR number to ensure strict order
+  cancel-in-progress: false  # Queue subsequent jobs instead of canceling
 
 jobs:
   push_job:
