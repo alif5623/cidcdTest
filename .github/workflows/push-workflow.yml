@@ -1,11 +1,11 @@
 name: push-workflow
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-    types: [closed]
+  workflow_run:
+    workflows: ["pull-request-workflow"]  # The workflow that must complete first
+    types:
+      - completed  # Only run after the PR workflow finishes
+
 jobs:
   push_job:
     runs-on: self-hosted
@@ -15,11 +15,8 @@ jobs:
         run: |
           echo "Event Name: ${{ github.event.name }}"
           echo "Event Action: ${{ github.event.action }}"
-      # Ensure the script is executable
       - name: Make build script executable
         run: chmod +x ${CI_DIR}/build.sh
-
-      # Run build script
       - name: Run build script on push
         run: bash ${CI_DIR}/build.sh
     env:
