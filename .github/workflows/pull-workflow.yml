@@ -1,0 +1,25 @@
+name: pull-workflow
+
+on:
+  pull_request:
+    branches: [main]
+    types: [closed]
+
+jobs:
+  pr_close_job:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v2
+      - name: Debug Event Details
+        run: |
+          echo "Event Name: ${{ github.event.name }}"
+          echo "Event Action: ${{ github.event.action }}"
+      - name: Make build script executable
+        run: chmod +x ${CI_DIR}/build.sh
+      - name: Run build script on pull request close
+        run: bash ${CI_DIR}/build.sh
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPO_MESSAGE: ${{ github.event.number }} ${{ github.event.head_commit.message }}
+      CI_DIR: "/Users/t-laode.ika/Documents/githubAction/cicd"
+      TVLK_TOP: "/Users/t-laode.ika/TVLK_TOP"
