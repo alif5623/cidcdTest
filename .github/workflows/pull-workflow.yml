@@ -5,10 +5,10 @@ on:
     branches: [main]
     types: [closed]
 
-# Concurrency group to handle PR merges one at a time
+# Concurrency group ensures pull requests are handled one at a time
 concurrency:
-  group: ci-${{ github.head_ref || github.event.pull_request.number }}  # Group by pull request or branch
-  cancel-in-progress: false  # Queue next workflow, don't cancel
+  group: ci-${{ github.event.pull_request.number }}  # Unique to the PR number
+  cancel-in-progress: false  # Queue subsequent jobs, don't cancel them
 
 jobs:
   pr_close_job:
@@ -18,6 +18,7 @@ jobs:
 
       - name: Debug Event Details
         run: |
+          echo "Pull Request Number: ${{ github.event.pull_request.number }}"
           echo "Event Name: ${{ github.event_name }}"
           echo "Event Action: ${{ github.event.action }}"
 
