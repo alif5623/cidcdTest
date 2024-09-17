@@ -1,8 +1,10 @@
 name: push-workflow
 
 on:
-  push:
-    branches: [main]
+  workflow_run:
+    workflows: ["pull-workflow"]  # The workflow that must complete first
+    types:
+      - completed  # Only run after the PR workflow finishes
 
 concurrency:
   group: ci-${{ github.ref }}  # Same concurrency group as the pull request workflow
