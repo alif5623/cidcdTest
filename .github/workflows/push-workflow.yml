@@ -6,9 +6,9 @@ on:
     types:
       - completed
 
-# Use the same concurrency group as the pull workflow
+# Use the same global concurrency lock to enforce strict order
 concurrency:
-  group: ci-group-${{ github.event.workflow_run.pull_requests[0].number }}  # Use the PR number to ensure strict order
+  group: global-ci  # Global concurrency lock across all workflows
   cancel-in-progress: false  # Queue subsequent jobs instead of canceling
 
 jobs:
