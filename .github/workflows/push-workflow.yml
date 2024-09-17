@@ -2,7 +2,7 @@ name: push-workflow
 
 on:
   workflow_run:
-    workflows: ["pull-request-workflow"]  # The workflow that must complete first
+    workflows: ["pull-workflow"]  # The workflow that must complete first
     types:
       - completed  # Only run after the PR workflow finishes
 
