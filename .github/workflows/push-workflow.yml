@@ -1,24 +1,30 @@
 name: push-workflow
 
 on:
-  workflow_run:
-    workflows: ["pull-workflow"]  # The workflow that must complete first
-    types:
-      - completed  # Only run after the PR workflow finishes
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}  # Same concurrency group as the pull request workflow
+  cancel-in-progress: false    # Ensure jobs are queued, not canceled
 
 jobs:
   push_job:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v2
+
       - name: Debug Event Details
         run: |
           echo "Event Name: ${{ github.event_name }}"
           echo "Event Action: ${{ github.event.action }}"
+
       - name: Make build script executable
         run: chmod +x ${CI_DIR}/build.sh
+
       - name: Run build script on push
         run: bash ${CI_DIR}/build.sh
+
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       REPO_MESSAGE: ${{ github.event.number }} ${{ github.event.head_commit.message }}
