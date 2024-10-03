@@ -30,7 +30,7 @@ jobs:
         run: bash ${CI_DIR}/build.sh
 
       - name: Clone & Commit Repository 
-        run:
+        run: |
           git clone https://user:$GITHUB_TOKEN@github.com/alif5623/cidcdTest.git
           cd cidcdTest
           git config user.name "alif5623"
