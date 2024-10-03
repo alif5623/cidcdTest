@@ -40,6 +40,8 @@ jobs:
           git commit -m "Update branch"
         
       - name: Push to prod Repo
+        run:|
+          git remote set-url origin https://user:$GITHUB_TOKEN@github.com/alif5623/cidcdTest.git
           git remote set-url origin
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
