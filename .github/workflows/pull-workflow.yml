@@ -44,6 +44,7 @@ jobs:
       - name: Commit changes
         run: |
           cd /Users/t-laode.ika/Documents/localCICD/cidcdTest
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/alif5623/cidcdTest.git
           git checkout prodTest
           git add .
           git commit -m "Auto-commit: Update to STG after PR merge" || echo "No changes to commit"
