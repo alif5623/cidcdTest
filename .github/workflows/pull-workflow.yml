@@ -3,16 +3,16 @@ name: pull-workflow
 on:
   pull_request:
     branches: [main]
-    types: [closed]
+    types: [closed, opened]
 
-# Concurrency lock for the specific pull request
 concurrency:
-  group: pull-ci-${{ github.event.pull_request.number }}  # Unique to the PR
-  cancel-in-progress: false  # Queue subsequent jobs instead of canceling
+  group: pull-ci-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
 
 jobs:
   pr_close_job:
     runs-on: self-hosted
+    environment: Test
     if: github.event.pull_request.merged == true
     steps:
       - uses: actions/checkout@v2
@@ -27,14 +27,11 @@ jobs:
           else
             echo "The PR was not merged."
           fi
-
       - name: Make build script executable
         run: chmod +x ${CI_DIR}/build.sh
 
       - name: Run build script
         run: bash ${CI_DIR}/build.sh
-
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      REPO_MESSAGE: ${{ github.event.number }} ${{ github.event.pull_request.title }}
       CI_DIR: "/Users/t-laode.ika/Documents/githubAction/cicd"
