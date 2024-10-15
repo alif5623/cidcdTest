@@ -1,5 +1,4 @@
 name: pull-workflow
-name: pull-workflow
 
 on:
   pull_request:
