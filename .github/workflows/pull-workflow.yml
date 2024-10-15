@@ -33,24 +33,6 @@ jobs:
 
       - name: Run build script
         run: bash ${CI_DIR}/build.sh
-            # Add a step to configure Git
-      - name: Configure Git
-        run: |
-          git config user.name "GitHub Action"
-          git config user.email "action@github.com"
-
-      # Add a step to commit changes (if any)
-      - name: Commit changes
-        run: |
-          cd /Users/t-laode.ika/Documents/localCICD/cidcdTest
-          git checkout prodTest
-          git add .
-          git commit -m "Auto-commit: Update to STG after PR merge" || echo "No changes to commit"
-
-      # Add a step to push changes to another branch (e.g., `target-branch`)
-      - name: Push to target branch
-        run: |
-          git push origin prodTest
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       REPO_MESSAGE: ${{ github.event.number }} ${{ github.event.pull_request.title }}
