@@ -30,7 +30,8 @@ jobs:
 
       - name: Run build script on push
         run: bash ${CI_DIR}/build.sh
-        # Add a step to configure Git
+        
+      # Add a step to configure Git
       - name: Configure Git
         run: |
           git config user.name "GitHub Action"
