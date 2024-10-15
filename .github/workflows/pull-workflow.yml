@@ -42,6 +42,7 @@ jobs:
       # Add a step to commit changes (if any)
       - name: Commit changes
         run: |
+          cd /Users/t-laode.ika/Documents/localCICD/cidcdTest
           git checkout prodTest
           git add .
           git commit -m "Auto-commit: Update to STG after PR merge" || echo "No changes to commit"
