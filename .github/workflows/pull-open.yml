@@ -31,4 +31,4 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       REPO_MESSAGE: ${{ github.event.number }} ${{ github.event.pull_request.title }}
-      CI_DIR: "/home/applmgr/cicd"
+      CI_DIR: "/Users/t-laode.ika/Documents/githubAction/cicd"
