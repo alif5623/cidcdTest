@@ -2,7 +2,7 @@ name: push-workflow
 
 on:
   workflow_run:
-    branches: ["devTest"]
+    branches: ["prodTest"]
     workflows: ["pull-workflow"]
     types:
       - completed
