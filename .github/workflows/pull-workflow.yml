@@ -45,7 +45,7 @@ jobs:
           git checkout prodTest
           # Cherry-pick the changes from the merged PR
           PR_COMMIT_SHA="${{ github.event.pull_request.merge_commit_sha }}"
-          git cherry-pick $PR_COMMIT_SHA || { echo "Cherry-pick failed!"; exit 1; }
+          git cherry-pick $PR_COMMIT_SHA -X ours || { echo "Cherry-pick failed!"; exit 1; }
 
       - name: Push changes to prodTest
         run: |
