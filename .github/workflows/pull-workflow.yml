@@ -61,6 +61,12 @@ jobs:
             git cherry-pick --continue # Continue cherry-pick
           fi
 
+      # Reset any changes in the .github/workflows folder
+      - name: Remove workflow changes
+        run: |
+          git reset HEAD .github/workflows/*
+          git checkout -- .github/workflows/*
+
       - name: Push changes to prodTest
         run: |
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/alif5623/cidcdTest.git
