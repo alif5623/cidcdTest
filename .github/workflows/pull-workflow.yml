@@ -39,18 +39,32 @@ jobs:
         run: |
           git config user.name "GitHub Action"
           git config user.email "action@github.com"
-      - name: Cherry-pick changes from devTest
+      - name: Checkout prodTest branch
         run: |
           git fetch origin
           git checkout prodTest
-          # Cherry-pick the changes from the merged PR
+
+      - name: Create a temporary branch
+        run: |
+          git checkout -b prodTest_temp
+
+      - name: Cherry-pick changes from devTest
+        run: |
           PR_COMMIT_SHA="${{ github.event.pull_request.merge_commit_sha }}"
-          git cherry-pick $PR_COMMIT_SHA -X ours || { echo "Cherry-pick failed!"; exit 1; }
+          if git cherry-pick $PR_COMMIT_SHA; then
+            echo "Cherry-pick succeeded."
+          else
+            echo "Cherry-pick failed, resolving conflicts."
+            # Resolve conflicts in favor of devTest changes
+            git checkout --theirs .   # Keep changes from the cherry-picked commit
+            git add .                 # Stage resolved files
+            git cherry-pick --continue # Continue cherry-pick
+          fi
 
       - name: Push changes to prodTest
         run: |
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/alif5623/cidcdTest.git
-          git push origin prodTest
+          git push origin prodTest_temp:prodTest --force
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
@@ -58,7 +72,7 @@ jobs:
           title: "Merge changes from devTest"
           body: "This pull request includes changes from the devTest branch."
           base: prodTest
-          head: prodTest
+          head: prodTest_temp
           token: ${{ secrets.GITHUB_TOKEN }}
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
