@@ -59,6 +59,7 @@ jobs:
             git checkout --theirs .
             git add .
             git cherry-pick --continue
+            git diff
           fi
 
       - name: Push temporary branch to remote
