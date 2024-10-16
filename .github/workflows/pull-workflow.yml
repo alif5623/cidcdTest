@@ -73,7 +73,7 @@ jobs:
           title: "Merge changes from devTest"
           body: "This pull request includes changes from the devTest branch."
           base: prodTest
-          head: prodTest_temp  
+          branch: prodTest_temp  
           token: ${{ secrets.GITHUB_TOKEN }}
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
