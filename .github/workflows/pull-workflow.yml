@@ -56,15 +56,19 @@ jobs:
       - name: Cherry-pick changes from devTest
         run: |
           PR_COMMIT_SHA="${{ github.event.pull_request.merge_commit_sha }}"
-          if git cherry-pick $PR_COMMIT_SHA; then
+          # Exclude changes from .github/workflows folder
+          if git cherry-pick $PR_COMMIT_SHA -- ':!.github/workflows'; then
             echo "Cherry-pick succeeded."
           else
             echo "Cherry-pick failed, resolving conflicts."
             # Resolve conflicts in favor of devTest changes
             git checkout --theirs .   # Keep changes from the cherry-picked commit
+            git reset .github/workflows # Unstage changes from the excluded folder
+            git checkout -- .github/workflows # Reset excluded folder to its original state
             git add .                 # Stage resolved files
             git cherry-pick --continue # Continue cherry-pick
           fi
+
 
       # Reset and remove changes in the .github/workflows folder before committing
       - name: Remove changes in .github/workflows
