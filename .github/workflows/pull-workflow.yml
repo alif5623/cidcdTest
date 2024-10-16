@@ -43,6 +43,7 @@ jobs:
         run: |
           git config user.name "GitHub Action"
           git config user.email "action@github.com"
+
       - name: Checkout prodTest branch
         run: |
           git fetch origin
@@ -65,11 +66,12 @@ jobs:
             git cherry-pick --continue # Continue cherry-pick
           fi
 
-      # Reset any changes in the .github/workflows folder
-      - name: Remove workflow changes
+      # Reset and remove changes in the .github/workflows folder before committing
+      - name: Remove changes in .github/workflows
         run: |
-          git reset HEAD .github/workflows/*
+          git restore --staged .github/workflows/*
           git checkout -- .github/workflows/*
+          echo "Workflow folder changes ignored."
 
       - name: Push changes to prodTest
         run: |
@@ -83,7 +85,7 @@ jobs:
           body: "This pull request includes changes from the devTest branch."
           base: prodTest
           branch: prodTest_temp
-          token: ${{ secrets.PAT || secrets.GITHUB_TOKEN  }}
+          token: ${{ secrets.PAT || secrets.GITHUB_TOKEN }}
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       REPO_MESSAGE: ${{ github.event.number }} ${{ github.event.pull_request.title }}
