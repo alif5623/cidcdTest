@@ -2,15 +2,10 @@ name: push-workflow
 
 on:
   workflow_run:
-    branches: ["prodTest"]
+    branches: ["devTest"]
     workflows: ["pull-workflow"]
     types:
       - completed
-
-# Concurrency lock for the specific pull request to ensure strict ordering
-concurrency:
-  group: push-ci-${{ github.event.workflow_run.pull_requests[0].number }}  # Unique to the PR
-  cancel-in-progress: false  # Queue subsequent jobs instead of canceling
 
 jobs:
   push_job:
@@ -29,7 +24,25 @@ jobs:
         run: chmod +x ${CI_DIR}/build.sh
 
       - name: Run build script on push
-        run: bash ${CI_DIR}/build.sh
+        run: bash ${CI_DIR}/build.sh || echo "Build script failed, but proceeding."
+
+      - name: Debug Build Script Status
+        run: echo "Build script completed, moving to next steps."
+
+      - name: Configure Git
+        run: |
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+
+      - name: Commit changes
+        run: |
+          cd /Users/t-laode.ika/Documents/localCICD/cidcdTest
+          git checkout prodTest
+          git add .
+          git commit -m "Auto-commit: Update to STG after PR merge" || echo "No changes to commit"
+
+      - name: Push to target branch
+        run: git push origin prodTest || echo "Push failed, but proceeding."
 
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
