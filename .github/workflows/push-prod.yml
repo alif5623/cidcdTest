@@ -1,9 +1,9 @@
-name: push-workflow
+name: push-prod-workflow
 
 on:
   workflow_run:
     branches: ["prodTest"]
-    workflows: ["pull-prod"]
+    workflows: ["pull-prod-workflow"]
     types:
       - completed
 
