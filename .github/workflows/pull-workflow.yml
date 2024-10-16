@@ -61,16 +61,22 @@ jobs:
             git cherry-pick --continue # Continue cherry-pick
           fi
 
-      - name: Push changes to prodTest
+      # Reset any changes in the .github/workflows folder
+      - name: Remove workflow changes
+        run: |
+          git reset HEAD .github/workflows/*
+          git checkout -- .github/workflows/*
+
+      - name: Push changes to prodTest_temp branch
         run: |
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/alif5623/cidcdTest.git
-          git push origin prodTest_temp:prodTest --force
+          git push origin prodTest_temp --force
 
-      - name: Create Pull Request
+      - name: Create Pull Request from prodTest_temp to prodTest
         uses: peter-evans/create-pull-request@v3
         with:
-          title: "Merge changes from devTest"
-          body: "This pull request includes changes from the devTest branch."
+          title: "Merge changes from devTest to prodTest"
+          body: "This pull request includes cherry-picked changes from the devTest branch."
           base: prodTest
           head: prodTest_temp
           token: ${{ secrets.GITHUB_TOKEN }}
