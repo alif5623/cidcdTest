@@ -73,7 +73,7 @@ jobs:
           title: "Merge changes from devTest"
           body: "This pull request includes changes from the devTest branch."
           base: prodTest
-          branch: prodTest_temp  # This is the correct parameter instead of 'head'
+          head: prodTest_temp  
           token: ${{ secrets.GITHUB_TOKEN }}
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
