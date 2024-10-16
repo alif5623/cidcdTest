@@ -56,16 +56,15 @@ jobs:
           else
             echo "Cherry-pick failed, resolving conflicts."
             # Resolve conflicts in favor of devTest changes
-            git checkout --theirs .
-            git add .
-            git cherry-pick --continue
-            git diff
+            git checkout --theirs .   # Keep changes from the cherry-picked commit
+            git add .                 # Stage resolved files
+            git cherry-pick --continue # Continue cherry-pick
           fi
 
-      - name: Push temporary branch to remote
+      - name: Push changes to prodTest
         run: |
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/alif5623/cidcdTest.git
-          git push origin prodTest_temp --force
+          git push origin prodTest_temp:prodTest --force
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
@@ -73,7 +72,7 @@ jobs:
           title: "Merge changes from devTest"
           body: "This pull request includes changes from the devTest branch."
           base: prodTest
-          branch: prodTest_temp  
+          head: prodTest_temp
           token: ${{ secrets.GITHUB_TOKEN }}
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
