@@ -38,58 +38,58 @@ jobs:
       - name: Run build script
         run: bash ${CI_DIR}/build.sh
 
-      # Add a step to configure Git
-      - name: Configure Git
-        run: |
-          git config user.name "GitHub Action"
-          git config user.email "action@github.com"
+      # # Add a step to configure Git
+      # - name: Configure Git
+      #   run: |
+      #     git config user.name "GitHub Action"
+      #     git config user.email "action@github.com"
 
-      - name: Checkout prodTest branch
-        run: |
-          git fetch origin
-          git checkout prodTest
+      # - name: Checkout prodTest branch
+      #   run: |
+      #     git fetch origin
+      #     git checkout prodTest
 
-      - name: Create a temporary branch
-        run: |
-          git checkout -b prodTest_temp
+      # - name: Create a temporary branch
+      #   run: |
+      #     git checkout -b prodTest_temp
 
-      - name: Cherry-pick changes from devTest
-        run: |
-          PR_COMMIT_SHA="${{ github.event.pull_request.merge_commit_sha }}"
-          # Exclude changes from .github/workflows folder
-          if git cherry-pick $PR_COMMIT_SHA -- ':!.github/workflows'; then
-            echo "Cherry-pick succeeded."
-          else
-            echo "Cherry-pick failed, resolving conflicts."
-            # Resolve conflicts in favor of devTest changes
-            git checkout --theirs .   # Keep changes from the cherry-picked commit
-            git reset .github/workflows # Unstage changes from the excluded folder
-            git checkout -- .github/workflows # Reset excluded folder to its original state
-            git add .                 # Stage resolved files
-            git cherry-pick --continue # Continue cherry-pick
-          fi
+      # - name: Cherry-pick changes from devTest
+      #   run: |
+      #     PR_COMMIT_SHA="${{ github.event.pull_request.merge_commit_sha }}"
+      #     # Exclude changes from .github/workflows folder
+      #     if git cherry-pick $PR_COMMIT_SHA -- ':!.github/workflows'; then
+      #       echo "Cherry-pick succeeded."
+      #     else
+      #       echo "Cherry-pick failed, resolving conflicts."
+      #       # Resolve conflicts in favor of devTest changes
+      #       git checkout --theirs .   # Keep changes from the cherry-picked commit
+      #       git reset .github/workflows # Unstage changes from the excluded folder
+      #       git checkout -- .github/workflows # Reset excluded folder to its original state
+      #       git add .                 # Stage resolved files
+      #       git cherry-pick --continue # Continue cherry-pick
+      #     fi
 
 
-      # Reset and remove changes in the .github/workflows folder before committing
-      - name: Remove changes in .github/workflows
-        run: |
-          git restore --staged .github/workflows/*
-          git checkout -- .github/workflows/*
-          echo "Workflow folder changes ignored."
+      # # Reset and remove changes in the .github/workflows folder before committing
+      # - name: Remove changes in .github/workflows
+      #   run: |
+      #     git restore --staged .github/workflows/*
+      #     git checkout -- .github/workflows/*
+      #     echo "Workflow folder changes ignored."
 
-      - name: Push changes to prodTest
-        run: |
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/alif5623/cidcdTest.git
-          git push origin prodTest_temp:prodTest --force
+      # - name: Push changes to prodTest
+      #   run: |
+      #     git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/alif5623/cidcdTest.git
+      #     git push origin prodTest_temp:prodTest --force
 
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v7
-        with:
-          title: "Merge changes from devTest"
-          body: "This pull request includes changes from the devTest branch."
-          base: prodTest
-          branch: prodTest_temp
-          token: ${{ secrets.PAT || secrets.GITHUB_TOKEN }}
+      # - name: Create Pull Request
+      #   uses: peter-evans/create-pull-request@v7
+      #   with:
+      #     title: "Merge changes from devTest"
+      #     body: "This pull request includes changes from the devTest branch."
+      #     base: prodTest
+      #     branch: prodTest_temp
+      #     token: ${{ secrets.PAT || secrets.GITHUB_TOKEN }}
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       REPO_MESSAGE: ${{ github.event.number }} ${{ github.event.pull_request.title }}
