@@ -38,16 +38,18 @@ jobs:
       - name: Run build script
         run: bash ${CI_DIR}/build.sh
 
-      # # Add a step to configure Git
-      # - name: Configure Git
-      #   run: |
-      #     git config user.name "GitHub Action"
-      #     git config user.email "action@github.com"
+      # Add a step to configure Git
+      - name: Configure Git
+        run: |
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
 
-      # - name: Checkout prodTest branch
-      #   run: |
-      #     git fetch origin
-      #     git checkout prodTest
+      - name: Checkout prodTest branch
+        run: |
+          git fetch origin
+          git add .
+          git checkout prodTest
+          git push origin prodTest
 
       # - name: Create a temporary branch
       #   run: |
