@@ -2,16 +2,23 @@ name: push-workflow
 
 on:
   workflow_run:
-    branches: ["devTest"]
     workflows: ["pull-workflow"]
     types:
       - completed
 
+concurrency:
+  group: push-ci-${{ github.event.workflow_run.pull_requests[0].number }}
+  cancel-in-progress: false
+
 jobs:
   push_job:
     runs-on: self-hosted
+
     steps:
-      - uses: actions/checkout@v2
+      - name: Check out devTest branch
+        uses: actions/checkout@v2
+        with:
+          ref: devTest
 
       - name: Debug Event Details
         run: |
@@ -24,27 +31,25 @@ jobs:
         run: chmod +x ${CI_DIR}/build.sh
 
       - name: Run build script on push
-        run: bash ${CI_DIR}/build.sh || echo "Build script failed, but proceeding."
-
-      - name: Debug Build Script Status
-        run: echo "Build script completed, moving to next steps."
+        run: bash ${CI_DIR}/build.sh
 
       - name: Configure Git
         run: |
-          git config user.name "GitHub Action"
-          git config user.email "action@github.com"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Commit changes
+      - name: Check out prodTest branch
+        run: git checkout prodTest
+
+      - name: Merge devTest into prodTest
+        run: git merge devTest --no-ff --commit -m "Merging changes from devTest to prodTest"
+
+      - name: Push changes to prodTest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          cd /Users/t-laode.ika/Documents/localCICD/cidcdTest
-          git checkout prodTest
-          git add .
-          git commit -m "Auto-commit: Update to STG after PR merge" || echo "No changes to commit"
-
-      - name: Push to target branch
-        run: git push origin prodTest || echo "Push failed, but proceeding."
-
+          git push origin prodTest
+          
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       REPO_MESSAGE: ${{ github.event.workflow_run.pull_requests[0].title }}
       CI_DIR: "/Users/t-laode.ika/Documents/githubAction/cicd"
