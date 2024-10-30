@@ -1,4 +1,4 @@
-name: pull-workflow
+name: pull-close-workflow-dev
 
 permissions:
   contents: write
@@ -38,14 +38,6 @@ jobs:
       - name: Run build script
         run: bash ${CI_DIR}/build.sh
       
-      - name: Opening pull request
-        id: pull
-        uses: tretuna/sync-branches@1.4.0
-        with:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-          FROM_BRANCH: "devTest"
-          TO_BRANCH: "prodTest"
-
       # # Add a step to configure Git
       # - name: Configure Git
       #   run: |
