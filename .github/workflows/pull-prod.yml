@@ -1,8 +1,8 @@
-name: pull-workflow
+name: pull-prod-workflow
 
 on:
   pull_request:
-    branches: [main]
+    branches: [prodtest]
     types: [closed]
 
 # Concurrency lock for the specific pull request
@@ -13,7 +13,6 @@ concurrency:
 jobs:
   pr_close_job:
     runs-on: self-hosted
-    environment: Test
     if: github.event.pull_request.merged == true
     steps:
       - uses: actions/checkout@v2
