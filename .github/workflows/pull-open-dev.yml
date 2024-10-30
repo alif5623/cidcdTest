@@ -1,4 +1,4 @@
-name: pull-open-workflow
+name: pull-open-workflow-dev
 
 on:
   pull_request:
