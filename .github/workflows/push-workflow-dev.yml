@@ -1,0 +1,52 @@
+name: push-workflow-dev
+
+on:
+  workflow_run:
+    workflows: ["pull-close-workflow-dev"]
+    types:
+      - completed
+
+concurrency:
+  group: push-ci-${{ github.event.workflow_run.pull_requests[0].number }}
+  cancel-in-progress: false
+
+jobs:
+  push_job:
+    runs-on: self-hosted
+
+    steps:
+      - name: Check out devTest branch
+        uses: actions/checkout@v2
+        with:
+          ref: devTest
+
+      - name: Debug Event Details
+        run: |
+          echo "Pull Request Number: ${{ github.event.workflow_run.pull_requests[0].number }}"
+          echo "Event Name: ${{ github.event_name }}"
+          echo "Event Action: ${{ github.event.action }}"
+          echo "The PR was merged."
+
+      - name: Make build script executable
+        run: chmod +x ${CI_DIR}/build.sh
+
+      - name: Run build script on push
+        run: bash ${CI_DIR}/build.sh
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      
+      - name: Opening pull request
+        id: pull
+        uses: tretuna/sync-branches@1.4.0
+        with:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          FROM_BRANCH: "devTest"
+          TO_BRANCH: "prodTest"
+          CONTENT_COMPARISON: "true"
+          
+    env:
+      REPO_MESSAGE: ${{ github.event.workflow_run.pull_requests[0].title }}
+      CI_DIR: "/Users/t-laode.ika/Documents/githubAction/cicd"
