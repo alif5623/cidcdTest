@@ -37,18 +37,14 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Check out prodTest branch
-        run: git checkout prodTest
-
-      - name: Merge devTest into prodTest
-        run: git merge devTest --no-ff --commit -m "Merging changes from devTest to prodTest"
-
-      - name: Push changes to prodTest
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git push origin prodTest
+      
+      - name: Opening pull request
+        id: pull
+        uses: tretuna/sync-branches@1.4.0
+        with:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          FROM_BRANCH: "devTest"
+          TO_BRANCH: "prodTest"
           
     env:
       REPO_MESSAGE: ${{ github.event.workflow_run.pull_requests[0].title }}
