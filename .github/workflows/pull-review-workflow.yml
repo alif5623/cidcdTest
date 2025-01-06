@@ -5,17 +5,16 @@ on:
 
 jobs:
   pr_review_requested_job:
-    # Runs only when a review is requested
     runs-on: self-hosted
-    if: github.event.action == 'deployment'
     steps:
       - uses: actions/checkout@v2
 
       - name: Debug Event Details
         run: |
           echo "Event Name: ${{ github.event_name }}"
-          echo "Event Action: ${{ github.event.action }}"
-          echo "The deployment need to be reviewed."
+          echo "Deployment ID: ${{ github.event.deployment.id }}"
+          echo "Environment: ${{ github.event.deployment.environment }}"
+          echo "The deployment needs to be reviewed."
 
       - name: Make build script executable
         run: chmod +x ${CI_DIR}/build.sh
@@ -25,5 +24,5 @@ jobs:
 
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      REPO_MESSAGE: ${{ github.event.number }} ${{ github.event.pull_request.title }}
+      REPO_MESSAGE: "Deployment ID: ${{ github.event.deployment.id }}"
       CI_DIR: "/home/applmgr/cicd"
