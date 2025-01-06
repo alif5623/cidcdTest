@@ -1,8 +1,7 @@
 name: pull-review-workflow
 
 on:
-  deployment_status:
-    types: [queued, in_progress, waiting]
+  deployment
 # Concurrency lock for the specific pull request
 concurrency:
   group: pull-ci-${{ github.event.pull_request.number }}  # Unique to the PR
