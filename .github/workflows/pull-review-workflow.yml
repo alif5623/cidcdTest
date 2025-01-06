@@ -1,22 +1,22 @@
-name: pull-review-workflow
+# name: pull-review-workflow
 
-on:
-  deployment
+# on:
+#   deployment
 
-jobs:
-  pr_review_requested_job:
-    runs-on: self-hosted
-    steps:
-      - uses: actions/checkout@v2
+# jobs:
+#   pr_review_requested_job:
+#     runs-on: self-hosted
+#     steps:
+#       - uses: actions/checkout@v2
 
-      - name: Debug Event Details
-        run: |
-          echo "Event Name: ${{ github.event_name }}"
-          echo "Deployment ID: ${{ github.event.deployment.id }}"
-          echo "Environment: ${{ github.event.deployment.environment }}"
-          echo "The deployment needs to be reviewed."
+#       - name: Debug Event Details
+#         run: |
+#           echo "Event Name: ${{ github.event_name }}"
+#           echo "Deployment ID: ${{ github.event.deployment.id }}"
+#           echo "Environment: ${{ github.event.deployment.environment }}"
+#           echo "The deployment needs to be reviewed."
           
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      REPO_MESSAGE: "Deployment ID: ${{ github.event.deployment.id }}"
-      CI_DIR: "/home/applmgr/cicd"
+#     env:
+#       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#       REPO_MESSAGE: "Deployment ID: ${{ github.event.deployment.id }}"
+#       CI_DIR: "/home/applmgr/cicd"
