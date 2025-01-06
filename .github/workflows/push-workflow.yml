@@ -2,7 +2,7 @@ name: push-workflow
 
 on:
   workflow_run:
-    workflows: ["pull-workflow"]
+    workflows: ["pull-close-workflow"]
     types:
       - completed
 
