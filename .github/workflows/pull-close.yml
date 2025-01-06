@@ -4,6 +4,10 @@ on:
   pull_request:
     branches: [main]
     types: [closed]
+# Concurrency lock for the specific pull request
+concurrency:
+  group: pull-ci-${{ github.event.pull_request.number }}  # Unique to the PR
+  cancel-in-progress: false  # Queue subsequent jobs instead of canceling
 
 jobs:
   pr_open_job:
