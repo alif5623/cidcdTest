@@ -15,13 +15,7 @@ jobs:
           echo "Deployment ID: ${{ github.event.deployment.id }}"
           echo "Environment: ${{ github.event.deployment.environment }}"
           echo "The deployment needs to be reviewed."
-
-      - name: Make build script executable
-        run: chmod +x ${CI_DIR}/build.sh
-
-      - name: Run build script
-        run: bash ${CI_DIR}/build.sh
-
+          
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       REPO_MESSAGE: "Deployment ID: ${{ github.event.deployment.id }}"
