@@ -1,7 +1,6 @@
 name: pull-review-workflow
 
-on:
-  deployment
+on: deployment
 
 concurrency:
   group: pull-ci-${{ github.event.deployment.id }}  # Unique to the deployment
