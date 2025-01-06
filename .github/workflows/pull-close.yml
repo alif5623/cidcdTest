@@ -8,7 +8,7 @@ on:
 jobs:
   pr_open_job:
     runs-on: self-hosted
-    environment: cicdTestEnv
+    environment: Test
     steps:
       - uses: actions/checkout@v2
 
